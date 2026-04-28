@@ -14,6 +14,7 @@ import sakura from '../assets/sakura.mp3';
 
 const Home = () => {
   const audioRef = useRef(new Audio(sakura));
+
   audioRef.current.volume = 0.4;
   audioRef.current.loop = true;
 
@@ -24,6 +25,8 @@ const Home = () => {
   useEffect(() => {
     if (isPlayingMusic) {
       audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
 
     return () => {
@@ -31,18 +34,18 @@ const Home = () => {
     };
   }, [isPlayingMusic]);
 
-  // FIXED FOR MOBILE + DESKTOP
+  // MOBILE + DESKTOP PERFECT FIX
   const adjustIslandForScreenSize = () => {
-    let screenScale = null;
-    let screenPosition = null;
+    let screenScale;
+    let screenPosition;
     let rotation = [0.1, 4.7, 0];
 
     if (window.innerWidth < 768) {
-      // Mobile View
-      screenScale = [0.75, 0.75, 0.75];
-      screenPosition = [0, -6, -43];
+      // Mobile
+      screenScale = [0.65, 0.65, 0.65];
+      screenPosition = [0, -5.5, -43];
     } else {
-      // Desktop View
+      // Desktop
       screenScale = [1, 1, 1];
       screenPosition = [0, -6.5, -43.4];
     }
@@ -50,16 +53,16 @@ const Home = () => {
     return [screenScale, screenPosition, rotation];
   };
 
-  // FIXED PLANE POSITION
   const adjustPlaneForScreenSize = () => {
-    let screenScale, screenPosition;
+    let screenScale;
+    let screenPosition;
 
     if (window.innerWidth < 768) {
-      // Mobile View
-      screenScale = [1.2, 1.2, 1.2];
+      // Mobile
+      screenScale = [1, 1, 1];
       screenPosition = [0, -1.5, 0];
     } else {
-      // Desktop View
+      // Desktop
       screenScale = [3, 3, 3];
       screenPosition = [0, -4, -4];
     }
@@ -70,12 +73,16 @@ const Home = () => {
   const [islandScale, islandPosition, islandRotation] =
     adjustIslandForScreenSize();
 
-  const [planeScale, planePosition] = adjustPlaneForScreenSize();
+  const [planeScale, planePosition] =
+    adjustPlaneForScreenSize();
 
   return (
     <section className="w-full h-screen relative">
+
       <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-        {currentStage && <HomeInfo currentStage={currentStage} />}
+        {currentStage && (
+          <HomeInfo currentStage={currentStage} />
+        )}
       </div>
 
       <Canvas
@@ -89,6 +96,7 @@ const Home = () => {
         }}
       >
         <Suspense fallback={<Loader />}>
+
           <directionalLight position={[1, 1, 1]} intensity={2} />
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 5, 10]} intensity={2} />
@@ -121,21 +129,24 @@ const Home = () => {
 
           <Plane
             isRotating={isRotating}
-            scale={planeScale}
             position={planePosition}
+            scale={planeScale}
             rotation={[0, 20.1, 0]}
           />
+
         </Suspense>
       </Canvas>
 
-      <div className="absolute bottom-2 left-2">
+      {/* SOUND BUTTON FIXED */}
+      <div className="absolute bottom-5 right-5 z-50">
         <img
-          src={!isPlayingMusic ? soundoff : soundon}
-          alt="sound"
+          src={isPlayingMusic ? soundon : soundoff}
+          alt="music"
           onClick={() => setIsPlayingMusic(!isPlayingMusic)}
           className="w-10 h-10 cursor-pointer object-contain"
         />
       </div>
+
     </section>
   );
 };
