@@ -157,6 +157,6 @@ export const projects = [
     name: "3D Developer Portfolio Website",
     description:
       "Currently building a responsive 3D portfolio website using React JS, Tailwind CSS, Three.js, and React Three Fiber to showcase projects, work experience, technical skills, and professional profile with interactive 3D elements and modern UI design.",
-    link: "YOUR_PORTFOLIO_LIVE_LINK_HERE",
+    link: "https://mohd-rizwan-ansari.netlify.app/",
   }
 ];

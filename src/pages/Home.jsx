@@ -14,7 +14,6 @@ import sakura from '../assets/sakura.mp3';
 
 const Home = () => {
   const audioRef = useRef(new Audio(sakura));
-
   audioRef.current.volume = 0.4;
   audioRef.current.loop = true;
 
@@ -25,8 +24,6 @@ const Home = () => {
   useEffect(() => {
     if (isPlayingMusic) {
       audioRef.current.play();
-    } else {
-      audioRef.current.pause();
     }
 
     return () => {
@@ -34,27 +31,35 @@ const Home = () => {
     };
   }, [isPlayingMusic]);
 
+  // FIXED FOR MOBILE + DESKTOP
   const adjustIslandForScreenSize = () => {
     let screenScale = null;
-    let screenPosition = [0, -6.5, -43.4];
+    let screenPosition = null;
     let rotation = [0.1, 4.7, 0];
 
     if (window.innerWidth < 768) {
-      screenScale = [0.9, 0.9, 0.9];
+      // Mobile View
+      screenScale = [0.75, 0.75, 0.75];
+      screenPosition = [0, -6, -43];
     } else {
+      // Desktop View
       screenScale = [1, 1, 1];
+      screenPosition = [0, -6.5, -43.4];
     }
 
     return [screenScale, screenPosition, rotation];
   };
 
+  // FIXED PLANE POSITION
   const adjustPlaneForScreenSize = () => {
     let screenScale, screenPosition;
 
     if (window.innerWidth < 768) {
-      screenScale = [1.5, 1.5, 1.5];
+      // Mobile View
+      screenScale = [1.2, 1.2, 1.2];
       screenPosition = [0, -1.5, 0];
     } else {
+      // Desktop View
       screenScale = [3, 3, 3];
       screenPosition = [0, -4, -4];
     }
@@ -77,7 +82,11 @@ const Home = () => {
         className={`w-full h-screen bg-transparent ${
           isRotating ? 'cursor-grabbing' : 'cursor-grab'
         }`}
-        camera={{ near: 0.1, far: 1000 }}
+        camera={{
+          near: 0.1,
+          far: 1000,
+          position: [0, 0, 15],
+        }}
       >
         <Suspense fallback={<Loader />}>
           <directionalLight position={[1, 1, 1]} intensity={2} />
